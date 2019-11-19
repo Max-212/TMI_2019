@@ -25,10 +25,10 @@ int wmain(int argc, wchar_t* argv[]) {
 		//Parm::PARM parm = Parm::getparm(argc, argv);
 		log = Log::getlog((wchar_t *)L"C:\\Лабы\\Курсач\\Тест\\log.log");
 		//wcout << "-in:" << parm.in << ", -out" << parm.out << ", -log: " << parm.log << endl;
-		//In::IN in = In::getin((wchar_t *)L"C:\\Лабы\\Курсач\\Тест\\test1.txt");
+		In::IN in = In::getin((wchar_t *)L"C:\\Лабы\\Курсач\\Тест\\test1.txt");
 
-		In::IN in = LA::del_extra(In::getin((wchar_t *)L"C:\\Лабы\\Курсач\\Тест\\test1.txt"));
-		cout << in.text << "--------" << in.size << endl;
+		//In::IN in = LA::del_extra(In::getin((wchar_t *)L"C:\\Лабы\\Курсач\\Тест\\test1.txt"));
+		//cout << in.text << "--------" << in.size << endl;
 		LA::Tables Tables = LA::Lex_analyz(in);
 		////bool i = PN::PolishNotation(15, Tables.LexTable, Tables.idTable);
 		////bool n = PN::PolishNotation(60, Tables.LexTable, Tables.idTable);

@@ -42,3 +42,5 @@ bool IT::IsId(IdTable &idtable, char id[ID_MAXSIZE]) {
 	}
 	return 0;
 }
+
+
