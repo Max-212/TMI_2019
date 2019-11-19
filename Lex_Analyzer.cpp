@@ -64,44 +64,46 @@ LA::Tables LA::Lex_analyz(In::IN in) {
 	int wordIndex = 0;
 
 	if (in.text == (unsigned char*)' ') i++;
-	int posWord = 1; // позиция слова в строке
+	int posWord = 0; // позиция слова в строке
 	int line = 1; // текущая строка
 	char* word = new char[256];
 
-	while (i< in.size)
+	while (i < in.size)
 	{
-		if (in.code[in.text[i]] == in.P || in.code[in.text[i]] == in.S)
+		if (in.code[in.text[i]] == in.T) 
 		{
-			if (in.code[in.text[i]] == in.P)
+			while (in.code[in.text[i]] == in.T) 
+			{
+				word[wordIndex++] = in.text[i++];
+				posWord++;
+			}
+			if (in.code[in.text[i]] == in.S || in.code[in.text[i]] == in.P)
 			{
 				word[wordIndex] = '\0';
-				std::cout << word << "\n";
-				if (in.text[i] == IN_CODE_ENDL) 
-				{
-					line++;
-					posWord = 1;
-				}
-				if (in.code[in.text[i+1]] == in.T) i++;
-			}
-			else 
-			{					
-				word[wordIndex] = '\0';
-				std::cout << word << "\n";
 				wordIndex = 0;
-				word[wordIndex++] = in.text[i++];
-				word[wordIndex] = '\0';
-				std::cout << word << "\n";
+				std::cout << word << std::endl;
+				
+			}
+		}
+		if (in.code[in.text[i]] == in.S) 
+		{
+			word[wordIndex++] = in.text[i++];
+			word[wordIndex] = '\0';
+			std::cout << word << std::endl;
+			posWord++;
+			wordIndex = 0;
+		}
+		if (in.code[in.text[i]] == in.P) 
+		{
+			if (in.text[i] = IN_CODE_ENDL) 
+			{
+				line++;
+				posWord = 0;
+				
 			}
 			wordIndex = 0;
-			
+			i++;
 		}
-		/*else if (in.code[in.text[i-1]) 
-		{
-
-		}*/
-		posWord++;
-		if (in.code[in.text[i]] != in.P) word[wordIndex++] = in.text[i];
-		i++;
 	}
 
 	return tables;
