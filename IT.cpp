@@ -31,16 +31,17 @@ Entry IT::GetEntry(IdTable &idtable, int n) {
 	return idtable.table[n];
 }
 
-bool IT::IsId(IdTable &idtable, char id[ID_MAXSIZE]) {
 
-	for (int i = idtable.size - 1; i >= 0; i--)
-	{
-		if (!strcmp(id, idtable.table[i].id))
+int IT::IsId(IdTable &idtable, char* id)
+{
+	 for (int i = idtable.size - 1; i >= 0; i--)
+	 {
+		if (strcmp(id, idtable.table[i].id) == 0)
 		{
-			return 1;
+			return i;
 		}
-	}
-	return 0;
+	 }
+	 return TI_NULLIDX;
 }
 
 

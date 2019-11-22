@@ -8,7 +8,7 @@
 
 namespace IT {
 
-	enum IDDATATYPE { INT = 1, STR = 2 };		// типы данных индентификаторов: integer , string
+	enum IDDATATYPE { INT = 1, STR = 2, BOOL = 3, INT8 = 4, NODEF = 0 };		// типы данных индентификаторов: integer , string
 	enum IDTYPE { V = 1, F = 2, P = 3, L = 4 };    // типы идентификаторов: переменная, функция, параметр, литерал
 
 	struct Entry {
@@ -22,8 +22,9 @@ namespace IT {
 				int len;						// количество символов в string
 				char* str;	// cимволы string
 			}vstr;								// значение string
+			bool vbool;
 		}value;									 // значение идентификатора
-
+		
 	};
 
 	struct IdTable {
@@ -38,7 +39,7 @@ namespace IT {
 
 	Entry GetEntry(IdTable& idtable, int n);
 
-	bool IsId(IdTable& idtable, char id[ID_MAXSIZE]); // есть ли индентификатор в таблице
+	int IsId(IdTable& idtable, char* id);		// есть ли индентификатор в таблице
 
 	void Delete(IdTable& idtable);
 }

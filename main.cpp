@@ -22,53 +22,66 @@ int wmain(int argc, wchar_t* argv[]) {
 	try
 	{
 
+		/*LA::Machines machines[N_GRAPHS] = {
+
+		{LEX_INTEGER   , FST::FST GRAPH_integer				},
+		{LEX_INTEGERx8 , FST::FST GRAPH_integerx8_literal	},
+		{LEX_STRING    , FST::FST GRAPH_string				},
+		{LEX_WRITE     , FST::FST GRAPH_print				},
+		{LEX_FUNCTION  , FST::FST GRAPH_function			},
+		{LEX_VAR	   , FST::FST GRAPH_var					},
+		{LEX_START     , FST::FST GRAPH_start				},
+		{LEX_RETURN    , FST::FST GRAPH_return				},
+		{LEX_COMMA     , FST::FST GRAPH_COMMA				},
+		{LEX_LEFTHESIS , FST::FST GRAPH_LEFTHESIS			},
+		{LEX_RIGHTHESIS, FST::FST GRAPH_RIGHTHESIS			},
+		{LEX_LEFTBRACE , FST::FST GRAPH_LEFTBRCE			},
+		{LEX_BRACELET  , FST::FST GRAPH_BRACELET			},
+		{LEX_DIRSLASH  , FST::FST GRAPH_DIRSLASH			},
+		{LEX_MINUS     , FST::FST GRAPH_MINUS				},
+		{LEX_PLUS      , FST::FST GRAPH_PLUS				},
+		{LEX_SEMICOLON , FST::FST GRAPH_SEMICOLON			},
+		{LEX_STAR      , FST::FST GRAPH_START				},
+		{LEX_EQUAL     , FST::FST GRAPH_EQUAL				},
+		{LEX_ID		   , FST::FST GRAPH_id					},
+		{LEX_LITERAL   , FST::FST GRAPH_integer_literal		},
+		{LEX_LITERAL   , FST::FST GRAPH_string_literal		},
+		};
+
+		if (FST::execute(machines[19].machine, (char*)""))
+			std::cout << "ХОрошо" << endl;
+		else
+			cout << "Плохо" << endl;*/
 		//Parm::PARM parm = Parm::getparm(argc, argv);
 		log = Log::getlog((wchar_t *)L"C:\\Лабы\\Курсач\\Тест\\log.log");
 		//wcout << "-in:" << parm.in << ", -out" << parm.out << ", -log: " << parm.log << endl;
 		In::IN in = In::getin((wchar_t *)L"C:\\Лабы\\Курсач\\Тест\\test1.txt");
 
-		//In::IN in = LA::del_extra(In::getin((wchar_t *)L"C:\\Лабы\\Курсач\\Тест\\test1.txt"));
-		//cout << in.text << "--------" << in.size << endl;
 		LA::Tables Tables = LA::Lex_analyz(in);
 		////bool i = PN::PolishNotation(15, Tables.LexTable, Tables.idTable);
 		////bool n = PN::PolishNotation(60, Tables.LexTable, Tables.idTable);
 
-		//cout << "\n----------------------------|\n";
-		//cout << " № | лексема | номер строки |\n";
-		//cout << "----------------------------|\n";
 
-		//for (int i = 0; i < Tables.LexTable.size; i++) {
-		//	cout << " " << Tables.LexTable.table[i].idxTI << " |    " << Tables.LexTable.table[i].lexema << "    |      " << Tables.LexTable.table[i].sn << "       |\t\t" << Tables.LexTable.table[i].indID << "\t\t" << Tables.LexTable.table[i].operatorValue << endl;
-		//}
+		LA::Inf inf;
+		cout << inf.iddatatype;
+
+		cout << "\n----------------------------|\n";
+		cout << " № | лексема | номер строки |\n";
+		cout << "----------------------------|\n";
+
+		for (int i = 0; i < Tables.LexTable.size; i++) {
+			cout << " " << Tables.LexTable.table[i].idxLT << " |    " << Tables.LexTable.table[i].lexema << "    |      " << Tables.LexTable.table[i].sn << "       |\t\t" << Tables.LexTable.table[i].indID << endl;
+		}
 
 		//cout << "________________________________\n";
 
 		//char* iddatatype;
 		//char* idtype;
 
-		//for (int i = 0; i < Tables.idTable.size; i++) {
-
-		//	switch (Tables.idTable.table[i].iddatatype) {
-		//	case IT::INT: { iddatatype = (char*)"integer"; break; }
-		//	case IT::STR: { iddatatype = (char*)"string";  break; }
-		//	default: iddatatype = (char*)"none"; break;
-		//	}
-
-		//	switch (Tables.idTable.table[i].idtype) {
-		//	case IT::F: { idtype = (char*)"function"; break; }
-		//	case IT::L: { idtype = (char*)"Literal";  break; }
-		//	case IT::P: { idtype = (char*)"Parametr";  break; }
-		//	case IT::V: { idtype = (char*)"Variable";  break; }
-		//	default: idtype = (char*)"none"; break;
-		//	}
-
-
-		//	if (Tables.idTable.table[i].iddatatype == IT::INT || Tables.idTable.table[i].idtype == IT::F) {
-		//		cout << Tables.idTable.table[i].id << "       \t" << iddatatype << "  \t\t" << idtype << "  \t\t" << Tables.idTable.table[i].value.vint << "                  \t\t" << Tables.idTable.table[i].idxfirstLE << endl;
-		//	}
-		//	else if (Tables.idTable.table[i].iddatatype == IT::STR) {
-		//		cout << Tables.idTable.table[i].id << "       \t" << iddatatype << "  \t\t" << idtype << "  \t\t" << Tables.idTable.table[i].value.vstr.str << "                \t\t" << Tables.idTable.table[i].idxfirstLE << endl;
-		//	}
+		for (int i = 0; i < Tables.idTable.size; i++) 
+		{
+			cout <<Tables.idTable.table[i].id << "\t\t" << Tables.idTable.table[i].idtype << "\t\t" << Tables.idTable.table[i].iddatatype << endl;
+		}
 
 
 
@@ -95,3 +108,6 @@ int wmain(int argc, wchar_t* argv[]) {
 	}
 	system("pause");
 }
+
+
+
