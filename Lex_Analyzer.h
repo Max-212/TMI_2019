@@ -4,7 +4,7 @@
 #include "IT.h"
 #include"LT.h"
 #include"In.h"
-#include <stack>
+#include <vector>
 
 #define N_GRAPHS 22
 #define LIBFUNCTIONS 2
@@ -261,7 +261,11 @@ namespace LA {
 	{
 		IT::IDDATATYPE iddatatype = IT::IDDATATYPE::NODEF;
 		IT::IDTYPE idtype = IT::IDTYPE::V;
-		std::stack<char> prefix;
+		char* prefix = new char(256);
+		bool flagInFunc = false;
+		bool flagParam = false;
+		bool flagFunc = false;
+		std::vector<const char*> functions;
 	};
 
 	void InTables(LA::Tables& tables, int posword, int line, char* word, LA::Inf& inf);
@@ -269,4 +273,6 @@ namespace LA {
 	Tables Lex_analyz(In::IN in);	
 
 	void GetInf(LA::Inf& inf, char *word);
+
+	bool CheckInVector(std::vector<const char*> vector, const char* word);
 }

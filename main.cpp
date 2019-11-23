@@ -80,7 +80,7 @@ int wmain(int argc, wchar_t* argv[]) {
 
 		for (int i = 0; i < Tables.idTable.size; i++) 
 		{
-			cout <<Tables.idTable.table[i].id << "\t\t" << Tables.idTable.table[i].idtype << "\t\t" << Tables.idTable.table[i].iddatatype << endl;
+			cout << i << "|\t" << Tables.idTable.table[i].id << "\t\t\t\t" << Tables.idTable.table[i].idtype << "\t\t\t" << Tables.idTable.table[i].iddatatype << "\t\t" << Tables.idTable.table[i].idxfirstLE << endl;
 		}
 
 

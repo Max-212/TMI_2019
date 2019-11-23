@@ -21,7 +21,7 @@ namespace Error
 		ERROR_ENTRY(112, "Ошибка при создании файла протокола (-log)"),
 		ERROR_ENTRY(113, "Слово не распознанно"), ERROR_ENTRY_NODEF(114),ERROR_ENTRY_NODEF(115),
 		ERROR_ENTRY_NODEF(116),ERROR_ENTRY_NODEF(117),ERROR_ENTRY_NODEF(118),ERROR_ENTRY_NODEF(119),
-		ERROR_ENTRY(120, "Семантическая ошибка. Отсутствует точка входа main"),
+		ERROR_ENTRY(120, "Семантическая ошибка. Отсутствует точка входа start"),
 		ERROR_ENTRY(121, "Семантическая ошибка. Функция main должна быть единственной"),
 		ERROR_ENTRY(122, "Семантическая ошибка. Использованна необъявленая переменная"),
 		ERROR_ENTRY(123, "Семантическая ошибка. Повторное объявление имени"),
