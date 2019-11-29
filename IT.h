@@ -16,13 +16,13 @@ namespace IT {
 		char* id;								// идентификатор
 		IDDATATYPE iddatatype;					// тип данных
 		IDTYPE idtype;							// тип идентификатора
-		union {
+		union Value{
 			int vint;							// значение integer
 			struct {
 				int len;						// количество символов в string
 				char* str;	// cимволы string
 			}vstr;								// значение string
-			bool vbool;
+			bool vbool;							// значение bool
 		}value;									 // значение идентификатора
 		
 	};

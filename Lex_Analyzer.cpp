@@ -2,10 +2,7 @@
 #include "FST.h"
 #include "Lex_Analyzer.h"
 #include "In.h"
-#include "Parm.h"
 #include "Log.h"
-#include <stack>
-#include <string>
 #include <vector>
 
 bool LA::CheckInVector(std::vector<const char*> vector, const char* word)
@@ -22,11 +19,13 @@ void LA::InTables(LA::Tables& tables, int posword, int line, char* word, LA::Inf
 	LA::Machines machines[N_GRAPHS] = {
 		{LEX_INTEGER   , FST::FST GRAPH_integer				},
 		{LEX_STRING    , FST::FST GRAPH_string				},
+		{LEX_BOOL	   , FST::FST GRAPH_bool				},
 		{LEX_WRITE     , FST::FST GRAPH_print				},
 		{LEX_FUNCTION  , FST::FST GRAPH_function			},
 		{LEX_VAR	   , FST::FST GRAPH_var					},
 		{LEX_START     , FST::FST GRAPH_start				},
 		{LEX_RETURN    , FST::FST GRAPH_return				},
+		{LEX_IF        , FST::FST GRAPH_if					},
 		{LEX_COMMA     , FST::FST GRAPH_COMMA				},
 		{LEX_LEFTHESIS , FST::FST GRAPH_LEFTHESIS			},
 		{LEX_RIGHTHESIS, FST::FST GRAPH_RIGHTHESIS			},
@@ -37,7 +36,10 @@ void LA::InTables(LA::Tables& tables, int posword, int line, char* word, LA::Inf
 		{LEX_PLUS      , FST::FST GRAPH_PLUS				},
 		{LEX_SEMICOLON , FST::FST GRAPH_SEMICOLON			},
 		{LEX_STAR      , FST::FST GRAPH_START				},
+		{LEX_EQUALITY  , FST::FST GRAPH_equality			},
 		{LEX_EQUAL     , FST::FST GRAPH_EQUAL				},
+		{LEX_LITERAL   , FST::FST GRAPH_true				},
+		{LEX_LITERAL   , FST::FST GRAPH_false				},
 		{LEX_LITERAL   , FST::FST GRAPH_integerx8_literal	},
 		{LEX_LITERAL   , FST::FST GRAPH_integer_literal		},
 		{LEX_LITERAL   , FST::FST GRAPH_string_literal		},
@@ -48,27 +50,51 @@ void LA::InTables(LA::Tables& tables, int posword, int line, char* word, LA::Inf
 	int indexIT = -1; 
 	bool executeFlag = 0;
 	bool IdFlag = 0;
+	union Value{
+		int vint;							// значение integer
+		struct {
+			int len;						// количество символов в string
+			char* str;						// cимволы string
+		}vstr;								// значение string
+		bool vbool;							// значение bool
+	}value;
+	value.vint = 0;
 
 	for (int i = 0; i < N_GRAPHS; i++)
 	{
 		if (FST::execute(machines[i].machine, word))
 		{
-			if (machines[i].lexema == 'i' || machines[i].lexema == 'l')
+			if (machines[i].lexema == 'i' || machines[i].lexema == 'l') // обработка литералов
 			{
-				if (i == N_GRAPHS - 4)
+				if (i == N_GRAPHS - 6)
+				{
+					inf.iddatatype = IT::IDDATATYPE::BOOL;
+					inf.idtype = IT::IDTYPE::L;
+					value.vbool = true;
+				}
+				else if(i == N_GRAPHS - 5)
+				{
+					inf.iddatatype = IT::IDDATATYPE::BOOL;
+					inf.idtype = IT::IDTYPE::L;
+					value.vbool = false;
+				}
+				else if (i == N_GRAPHS - 4)
 				{
 					inf.iddatatype = IT::IDDATATYPE::INT8;
 					inf.idtype = IT::IDTYPE::L;
+					value.vint = atoi(word);
 				}
 				else if (i == N_GRAPHS - 3)
 				{
 					inf.iddatatype = IT::IDDATATYPE::INT;
 					inf.idtype = IT::IDTYPE::L;
+					value.vint = atoi(word);
 				}
 				else if (i == N_GRAPHS - 2)
 				{
 					inf.iddatatype = IT::IDDATATYPE::STR;
 					inf.idtype = IT::IDTYPE::L;
+					value.vstr = { (int)strlen(word), word };
 				}	
 				IdFlag = true;
 			}
@@ -80,20 +106,22 @@ void LA::InTables(LA::Tables& tables, int posword, int line, char* word, LA::Inf
 	if (executeFlag)
 	{	
 		if (IdFlag)
-		{
-			if (CheckInVector(inf.functions, (const char*)word));
+		{if (CheckInVector(inf.functions, (const char*)word) || lexema == 'l');
 			else if (inf.flagInFunc)
 			{
 				strcat(word, "_");
 				strcat(word, inf.prefix);
 			}
+			
 			indexIT = IT::IsId(tables.idTable, word);
-			if(indexIT != TI_NULLIDX && inf.iddatatype != IT::IDDATATYPE::NODEF) throw Error::geterrorin(123, line, posword); // повторна€ инициализаци€
+			if(indexIT != TI_NULLIDX && inf.iddatatype != IT::IDDATATYPE::NODEF && inf.idtype != IT::IDTYPE::L) throw Error::geterrorin(123, line, posword); // повторна€ инициализаци€
 			if (indexIT == TI_NULLIDX) // добавл€ем в таблицу индентификаторов
 			{
 				if(inf.iddatatype == IT::IDDATATYPE::NODEF) throw Error::geterrorin(122, line, posword); // использование без объ€влени€
 				indexIT = tables.idTable.size;
-				IT::Add(tables.idTable, { tables.LexTable.size, word, inf.iddatatype, inf.idtype , 0});
+				IT::Entry IdTableEntry = { tables.LexTable.size, word, inf.iddatatype, inf.idtype , 0 };
+				memcpy(&IdTableEntry.value, &value, sizeof(Value));
+				IT::Add(tables.idTable, IdTableEntry);
 				inf.iddatatype = IT::IDDATATYPE::NODEF;
 				inf.idtype = IT::IDTYPE::V;
 			}
@@ -108,7 +136,8 @@ void LA::GetInf(LA::Inf& inf, char *word)
 {
 	if (strcmp(word, "int") == 0) inf.iddatatype = IT::IDDATATYPE::INT;
 	else if (strcmp(word, "string") == 0) inf.iddatatype = IT::IDDATATYPE::STR;
-	else if (strcmp(word, "bool") == 0) inf.iddatatype = IT::IDDATATYPE::BOOL;
+	else if (strcmp(word, "bool") == 0) 
+		inf.iddatatype = IT::IDDATATYPE::BOOL;
 	else if (strcmp(word, "Func") == 0)
 	{
 		inf.idtype = IT::IDTYPE::F;
@@ -129,6 +158,7 @@ void LA::GetInf(LA::Inf& inf, char *word)
 		for (int i = 0; i <= strlen(word); i++) inf.prefix[i] = word[i];
 		if(strcmp(word,"start") != 0) inf.functions.push_back((const char*)word);
 	}
+	else if (inf.flagParam) inf.idtype = IT::IDTYPE::P;
 	else if (strcmp(word, "{") == 0) inf.flagInFunc = true;
 	else if (strcmp(word, "}") == 0) 
 	{
@@ -145,6 +175,8 @@ LA::Tables LA::Lex_analyz(In::IN in) {
 	tables.idTable	= IT::Create();
 	LA::Inf inf;
 	inf.functions.push_back("strlen");
+	IT::Entry IdTableEntry = { tables.LexTable.size, (char*)"strlen", IT::IDDATATYPE::INT, IT::IDTYPE::F , 0 };
+	IT::Add(tables.idTable, IdTableEntry);
 
 	int i = 0; // индекс по in.text
 	int wordIndex = 0;

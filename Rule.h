@@ -9,24 +9,25 @@ namespace GRB
 		6,
 
 		Rule(NS('S'), GRB_ERROR_SERIES + 0,						// Неверная структура программы	
-			3,	//S->m{NrE;}; | tfi(F){NrE;};S | tfi(F){NrE;}
-			Rule::Chain(8, TS('m'), TS('{'), NS('N'), TS('r'), NS('E'), TS(';'), TS('}'), TS(';')),
-			Rule::Chain(14, TS('t'), TS('f'), TS('i'), TS('('), NS('F'), TS(')'), TS('{'), NS('N'), TS('r'), NS('E'), TS(';'), TS('}'), TS(';'), NS('S')),
-			Rule::Chain(9, TS('m'), TS('{'), NS('N'), TS('r'), NS('E'), TS(';'), TS('}'), TS(';'), NS('S'))
+			3,	//S->m{NrE;}; | tfi(F){N};S | tfi(F){NrE;}
+			Rule::Chain(8, TS('s'), TS('{'), NS('N'),TS('}'), TS(';')),
+			Rule::Chain(14,TS('t'), TS('f'), TS('i'), TS('('), NS('F'), TS(')'), TS('{'), NS('N'),TS('}'), TS(';'), NS('S')),
+			Rule::Chain(9, TS('s'), TS('{'), NS('N'),TS('}'), TS(';'), NS('S'))
 		),
 
 		Rule(NS('N'), GRB_ERROR_SERIES + 1,					// Ошибочный оператор
-			10,
-			Rule::Chain(4, TS('d'), TS('t'), TS('i'), TS(';')),
-			Rule::Chain(3, TS('r'), NS('E'), TS(';')),
+			11,
+			Rule::Chain(4, TS('v'), TS('t'), TS('i'), TS(';')),
 			Rule::Chain(4, TS('i'), TS('='), NS('E'), TS(';')),
-			Rule::Chain(8, TS('d'), TS('t'), TS('f'), TS('i'), TS('('), NS('F'), TS(')'), TS(';')),
-			Rule::Chain(5, TS('d'), TS('t'), TS('i'), TS(';'), NS('N')),
+			Rule::Chain(5, TS('v'), TS('t'), TS('i'), TS(';'), NS('N')),
 			Rule::Chain(4, TS('r'), NS('E'), TS(';'), NS('N')),
+			Rule::Chain(3, TS('r'), NS('E'), TS(';')),
 			Rule::Chain(5, TS('i'), TS('='), NS('E'), TS(';'), NS('N')),
-			Rule::Chain(9, TS('d'), TS('t'), TS('f'), TS('i'), TS('('), NS('F'), TS(')'), TS(';'), NS('N')),
-			Rule::Chain(3, TS('p'), NS('E'), TS(';')),
-			Rule::Chain(4, TS('p'), NS('E'), TS(';'), NS('N'))
+			Rule::Chain(9, TS('v'), TS('t'), TS('f'), TS('i'), TS('('), NS('F'), TS(')'), TS(';'), NS('N')),
+			Rule::Chain(3, TS('w'), NS('E'), TS(';')),
+			Rule::Chain(4, TS('w'), NS('E'), TS(';'), NS('N')),
+			Rule::Chain(8, TS('?'), TS('('), NS('E'), TS(')'), TS('{'), NS('N'), TS('}'), NS('N')),
+			Rule::Chain(7, TS('?'), TS('('), NS('E'), TS(')'), TS('{'), NS('N'), TS('}'))
 		),
 
 		Rule(NS('E'), GRB_ERROR_SERIES + 2,					// Ошибка в выражении 
@@ -44,11 +45,11 @@ namespace GRB
 		Rule(NS('M'), GRB_ERROR_SERIES + 3,
 			2,
 
-			Rule::Chain(2, TS('v'), NS('E')),
-			Rule::Chain(3, TS('v'), NS('E'), NS('M'))
+			Rule::Chain(2, TS('o'), NS('E')),
+			Rule::Chain(3, TS('o'), NS('E'), NS('M'))
 		),
 
-		Rule(NS('F'), GRB_ERROR_SERIES + 4,
+		Rule(NS('F'), GRB_ERROR_SERIES + 4, // ошибка в параметрах
 			2,
 			Rule::Chain(2, TS('t'), TS('i')),
 			Rule::Chain(4, TS('t'), TS('i'), TS(','), NS('F'))
