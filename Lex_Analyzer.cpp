@@ -27,6 +27,8 @@ void LA::InTables(LA::Tables& tables, int posword, int line, char* word, LA::Inf
 		{LEX_RETURN    , FST::FST GRAPH_return				},
 		{LEX_IF        , FST::FST GRAPH_if					},
 		{LEX_COMMA     , FST::FST GRAPH_COMMA				},
+		{LEX_STARTBLOCK, FST::FST GRAPH_STARTBLOCK			},
+		{LEX_ENDBLOCK  , FST::FST GRAPH_ENDBLOCK			},
 		{LEX_LEFTHESIS , FST::FST GRAPH_LEFTHESIS			},
 		{LEX_RIGHTHESIS, FST::FST GRAPH_RIGHTHESIS			},
 		{LEX_LEFTBRACE , FST::FST GRAPH_LEFTBRCE			},
@@ -175,7 +177,7 @@ LA::Tables LA::Lex_analyz(In::IN in) {
 	tables.idTable	= IT::Create();
 	LA::Inf inf;
 	inf.functions.push_back("strlen");
-	IT::Entry IdTableEntry = { tables.LexTable.size, (char*)"strlen", IT::IDDATATYPE::INT, IT::IDTYPE::F , 0 };
+	IT::Entry IdTableEntry = { -1, (char*)"strlen", IT::IDDATATYPE::INT, IT::IDTYPE::F , 0 };
 	IT::Add(tables.idTable, IdTableEntry);
 
 	int i = 0; // индекс по in.text

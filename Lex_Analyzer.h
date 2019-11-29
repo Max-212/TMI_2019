@@ -5,7 +5,7 @@
 #include"In.h"
 #include <vector>
 
-#define N_GRAPHS 27
+#define N_GRAPHS 29
 #define LIBFUNCTIONS 2
 
 #define GRAPH_string  (7,   \
@@ -217,6 +217,13 @@ FST::NODE())
 
 #define GRAPH_COMMA (2,FST::NODE(1, FST::RELATION(',', 1)),\
 	FST::NODE())
+
+#define GRAPH_STARTBLOCK (2,FST::NODE(1, FST::RELATION('[', 1)),\
+	FST::NODE())
+
+#define GRAPH_ENDBLOCK (2,FST::NODE(1, FST::RELATION(']', 1)),\
+	FST::NODE())
+
 
 #define GRAPH_LEFTBRCE (2,FST::NODE(1, FST::RELATION('{', 1)),\
 	FST::NODE())

@@ -16,6 +16,8 @@
 #define LEX_COMMA		','
 #define LEX_LEFTBRACE	'{'
 #define LEX_BRACELET	'}'
+#define LEX_STARTBLOCK  '['
+#define LEX_ENDBLOCK    ']'
 #define LEX_LEFTHESIS	'('
 #define LEX_RIGHTHESIS	')'
 #define LEX_PLUS		'o'

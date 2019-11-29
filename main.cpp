@@ -11,6 +11,7 @@
 #include "PolishNotation.h"
 #include "GRB.h"
 #include "MFST.h"
+#include "semantic.h"
 
 using namespace std;
 
@@ -62,6 +63,8 @@ int wmain(int argc, wchar_t* argv[]) {
 			MFST::Mfst mfst(Tables, GRB::getGreibach());
 		mfst.start();
 		mfst.printrules();
+
+		SA::SemAnalysis(Tables);
 
 		/*Log::WriteLine(log, "Тест:", "без ошибок", "");
 		Log::WriteLog(log);

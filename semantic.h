@@ -9,10 +9,21 @@ namespace SA
 {
 	struct Flags
 	{
-		bool flagFunction = false;
+		bool flagDecFunction = false;   // обнаруженно объявление функции
+		bool flagCallFunction = false;  // обнаружен вызов функции
+		bool flagParametres = false;    // считывание параметров функции
+		bool flagInFunction = false;    // вошли в блок функции
 	};
+
+	struct Function
+	{
+		IT::Entry function;
+		std::vector<IT::IDDATATYPE> parameters;
+	};
+
 	void SemAnalysis(LA::Tables tables);
 
-	void GetInf(char lexema, SA::Flags& flags);
+	void GetFlags(char lexema, SA::Flags& flags);
 
+	int CheckInFunctions(std::vector<SA::Function> functions, char* id);
 }
