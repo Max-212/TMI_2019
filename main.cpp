@@ -52,8 +52,9 @@ int wmain(int argc, wchar_t* argv[]) {
 
 		for (int i = 0; i < Tables.idTable.size; i++) 
 		{
-			cout << i << "|\t" << Tables.idTable.table[i].id << "\t\t\t\t" << Tables.idTable.table[i].idtype << "\t\t\t" << Tables.idTable.table[i].iddatatype << "\t\t" << Tables.idTable.table[i].idxfirstLE << endl;
+			cout << i << "|\t" << Tables.idTable.table[i].id << "\t\t\t\t" << Tables.idTable.table[i].idtype << "\t\t\t" << Tables.idTable.table[i].iddatatype << "\t\t" << Tables.idTable.table[i].idxfirstLE << "\t\t" << Tables.idTable.table[i].value.vint << endl;
 		}
+
 
 	
 
@@ -65,6 +66,14 @@ int wmain(int argc, wchar_t* argv[]) {
 		mfst.printrules();
 
 		SA::SemAnalysis(Tables);
+
+		cout << "\n----------------------------|\n";
+		cout << " № | лексема | номер строки |\n";
+		cout << "----------------------------|\n";
+
+		for (int i = 0; i < Tables.LexTable.size; i++) {
+			cout << " " << Tables.LexTable.table[i].idxLT << " |    " << Tables.LexTable.table[i].lexema << "    |      " << Tables.LexTable.table[i].sn << "       |\t\t" << Tables.LexTable.table[i].indID << endl;
+		}
 
 		/*Log::WriteLine(log, "Тест:", "без ошибок", "");
 		Log::WriteLog(log);

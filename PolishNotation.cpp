@@ -91,14 +91,15 @@ bool PN::PolishNotation(int n, LT::LexTable & lextable, IT::IdTable & idtable)
 	i = n;
 
 	for (i; i <= posLast; i++) {
+		lextable.table[i] = { '#' , -1 , i , -1 };
 		while (!current.empty())
 		{
 			lextable.table[i] = current.front();
-			lextable.table[i].idxLT = i + 1;
+			lextable.table[i].idxLT = i;
 			current.pop();
 			i++;
 		}
-		lextable.table[i] = { '#' , 0 , i + 1 , 0 };
+		
 	}
 	return true;
 }
@@ -108,7 +109,7 @@ int PN::getP(LT::Entry table)
 
 	char token = table.lexema;
 
-	if (token == 'v') token = table.operatorValue;
+	if (token == 'o') token = table.operatorValue;
 
 	if (token == '*' || token == '/') return 3;
 	else if (token == '+' || token == '-') return 2;

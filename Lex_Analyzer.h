@@ -6,7 +6,6 @@
 #include <vector>
 
 #define N_GRAPHS 29
-#define LIBFUNCTIONS 2
 
 #define GRAPH_string  (7,   \
 FST::NODE(1, FST::RELATION('s', 1)), \
@@ -42,7 +41,7 @@ FST::NODE(1, FST::RELATION('f', 1)), \
 FST::NODE(1, FST::RELATION('a', 2)), \
 FST::NODE(1, FST::RELATION('l', 3)), \
 FST::NODE(1, FST::RELATION('s', 4)), \
-FST::NODE(1, FST::RELATION('e', 4)), \
+FST::NODE(1, FST::RELATION('e', 5)), \
 FST::NODE())
 
 #define GRAPH_print (6,\

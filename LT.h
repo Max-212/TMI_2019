@@ -37,6 +37,7 @@ namespace LT {
 		int idxLT;					// индекс в таблице лексем
 		int indID;					// индес в таблицце индентификаторов
 		char operatorValue;			// значение оператора для операторов.
+		int posWord;				// позиция в строке
 	};
 
 	struct LexTable {

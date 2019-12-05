@@ -5,6 +5,18 @@
 #include "Log.h"
 #include <vector>
 
+
+int conv(char* s)
+{
+	int res = 0;
+	for (int i = 0; i < strlen(s); ++i) 
+	{
+		res *= 8;
+		res += (s[i] - '0');
+	}
+	return res;
+}
+
 bool LA::CheckInVector(std::vector<const char*> vector, const char* word)
 {
 	for (int i = 0; i < vector.size(); i++)
@@ -82,9 +94,9 @@ void LA::InTables(LA::Tables& tables, int posword, int line, char* word, LA::Inf
 				}
 				else if (i == N_GRAPHS - 4)
 				{
-					inf.iddatatype = IT::IDDATATYPE::INT8;
+					inf.iddatatype = IT::IDDATATYPE::INT;
 					inf.idtype = IT::IDTYPE::L;
-					value.vint = atoi(word);
+					value.vint = conv(word);
 				}
 				else if (i == N_GRAPHS - 3)
 				{
@@ -128,7 +140,7 @@ void LA::InTables(LA::Tables& tables, int posword, int line, char* word, LA::Inf
 				inf.idtype = IT::IDTYPE::V;
 			}
 		} 
-		LT::Add(tables.LexTable, {lexema, line, tables.LexTable.size, indexIT, word[0]});
+		LT::Add(tables.LexTable, {lexema, line, tables.LexTable.size, indexIT, word[0], posword});
 		//word = NULL;
 	}
 	else throw Error::geterrorin(113, line, posword);
