@@ -65,7 +65,7 @@ void LA::InTables(LA::Tables& tables, int posword, int line, char* word, LA::Inf
 	bool executeFlag = 0;
 	bool IdFlag = 0;
 	union Value{
-		int vint;							// значение integer
+		unsigned int vint;							// значение integer
 		struct {
 			int len;						// количество символов в string
 			char* str;						// cимволы string

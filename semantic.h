@@ -27,7 +27,7 @@ namespace SA
 		std::vector<IT::IDDATATYPE> parameters;
 	};
 
-	void SemAnalysis(LA::Tables tables);
+	std::vector<SA::Function> SemAnalysis(LA::Tables tables);
 
 	void GetFlags(char lexema, SA::Flags& flags);
 

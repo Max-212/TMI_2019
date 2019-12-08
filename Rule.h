@@ -22,8 +22,8 @@ namespace GRB
 			Rule::Chain(5, TS('v'), TS('t'), TS('i'), TS(';'), NS('N')),
 			Rule::Chain(5, TS('i'), TS('='), NS('E'), TS(';'), NS('N')),
 			Rule::Chain(9, TS('v'), TS('t'), TS('f'), TS('i'), TS('('), NS('F'), TS(')'), TS(';'), NS('N')),
-			Rule::Chain(3, TS('w'), NS('E'), TS(';')),
-			Rule::Chain(4, TS('w'), NS('E'), TS(';'), NS('N')),
+			Rule::Chain(5, TS('w'), TS('('), NS('R'), TS(')'), TS(';')),
+			Rule::Chain(6, TS('w'), TS('('), NS('R'), TS(')'), TS(';'), NS('N')),
 			Rule::Chain(8, TS('?'), TS('('), NS('I'), TS(')'), TS('['), NS('N'), TS(']'), NS('N')),
 			Rule::Chain(7, TS('?'), TS('('), NS('I'), TS(')'), TS('['), NS('N'), TS(']'))
 		),

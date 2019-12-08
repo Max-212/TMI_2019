@@ -19,7 +19,7 @@ void SA::GetFlags(char lexema, SA::Flags& flags)
 	}
 	else if (lexema == '{' && flags.flagDecFunction)
 	{
-		flags.flagDecFunction = false;
+		flags.flagDecFunction = false; 
 		flags.flagParametres = false;
 		flags.flagInFunction = true;
 	}
@@ -38,7 +38,7 @@ int SA::CheckInFunctions(std::vector<SA::Function> functions, char* id)
 	return -1;
 }
 
-void SA::SemAnalysis(LA::Tables tables) 
+std::vector<SA::Function> SA::SemAnalysis(LA::Tables tables) 
 {
 	SA::Flags flags;
 	std::vector<SA::Function> functions;
@@ -57,8 +57,12 @@ void SA::SemAnalysis(LA::Tables tables)
 			if (flags.flagExpression)// проверяем типы операндов в выражении
 			{
 				if (tables.idTable.table[indID].iddatatype != flags.ExpressionType) throw Error::geterrorin(127, tables.LexTable.table[i].sn, tables.LexTable.table[i].posWord);
+				if (tables.LexTable.table[i+1].lexema == 'o')
+				{
+					if(tables.idTable.table[indID].iddatatype != IT::INT) throw Error::geterrorin(120, tables.LexTable.table[i+1].sn, tables.LexTable.table[i+1].posWord);
+				}
 			}
-			if (flags.flagReturn)
+			if (flags.flagReturn)	 
 			{
 				if (functions[functions.size() - 1].function.iddatatype != tables.idTable.table[indID].iddatatype) throw Error::geterrorin(121, tables.LexTable.table[i].sn, tables.LexTable.table[i].posWord);
 				else if(tables.idTable.table[indID].idtype == IT::F) throw Error::geterrorin(121, tables.LexTable.table[i].sn, tables.LexTable.table[i].posWord);
@@ -124,8 +128,7 @@ void SA::SemAnalysis(LA::Tables tables)
 			{
 				if (tables.idTable.table[indID].iddatatype != IT::BOOL || tables.idTable.table[indID].idtype == IT::F) throw Error::geterrorin(125, tables.LexTable.table[i].sn, tables.LexTable.table[i].posWord);
 			}
-
-
 		}
 	}
+	return functions;
 }

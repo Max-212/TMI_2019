@@ -12,6 +12,8 @@
 #include "GRB.h"
 #include "MFST.h"
 #include "semantic.h"
+#include "Generation.h"
+#include <fstream>
 
 using namespace std;
 
@@ -20,19 +22,18 @@ int wmain(int argc, wchar_t* argv[]) {
 
 	setlocale(LC_ALL, "rus");
 	Log::LOG log = Log::INTLOG;
+	
 	try
 	{
-
-		
 		//Parm::PARM parm = Parm::getparm(argc, argv);
 		log = Log::getlog((wchar_t *)L"C:\\Лабы\\Курсач\\Тест\\log.log");
+		//std::ofstream out((wchar_t *)L"C:\\Лабы\\Курсач\\Тест\\out.asm");
 		//wcout << "-in:" << parm.in << ", -out" << parm.out << ", -log: " << parm.log << endl;
 		In::IN in = In::getin((wchar_t *)L"C:\\Лабы\\Курсач\\Тест\\test1.txt");
 
 		LA::Tables Tables = LA::Lex_analyz(in);
 		////bool i = PN::PolishNotation(15, Tables.LexTable, Tables.idTable);
 		////bool n = PN::PolishNotation(60, Tables.LexTable, Tables.idTable);
-
 
 		LA::Inf inf;
 		cout << inf.iddatatype;
@@ -52,7 +53,7 @@ int wmain(int argc, wchar_t* argv[]) {
 
 		for (int i = 0; i < Tables.idTable.size; i++) 
 		{
-			cout << i << "|\t" << Tables.idTable.table[i].id << "\t\t\t\t" << Tables.idTable.table[i].idtype << "\t\t\t" << Tables.idTable.table[i].iddatatype << "\t\t" << Tables.idTable.table[i].idxfirstLE << "\t\t" << Tables.idTable.table[i].value.vint << endl;
+			cout << i << "|\t" << Tables.idTable.table[i].id << "\t\t\t\t" << Tables.idTable.table[i].idtype << "\t\t\t" << Tables.idTable.table[i].iddatatype << "\t\t" << Tables.idTable.table[i].idxfirstLE << "\t\t" << Tables.idTable.table[i].value.vint <<  endl;
 		}
 
 
@@ -65,20 +66,21 @@ int wmain(int argc, wchar_t* argv[]) {
 		mfst.start();
 		mfst.printrules();
 
-		SA::SemAnalysis(Tables);
+		std::vector<SA::Function> functions = SA::SemAnalysis(Tables);
 
 		cout << "\n----------------------------|\n";
 		cout << " № | лексема | номер строки |\n";
 		cout << "----------------------------|\n";
 
 		for (int i = 0; i < Tables.LexTable.size; i++) {
-			cout << " " << Tables.LexTable.table[i].idxLT << " |    " << Tables.LexTable.table[i].lexema << "    |      " << Tables.LexTable.table[i].sn << "       |\t\t" << Tables.LexTable.table[i].indID << endl;
+			cout << " " << Tables.LexTable.table[i].idxLT << " |    " << Tables.LexTable.table[i].lexema << "    |      " << Tables.LexTable.table[i].sn << "       |\t\t" << Tables.LexTable.table[i].indID << "\t\t" << Tables.LexTable.table[i].operatorValue << endl;
 		}
 
-		/*Log::WriteLine(log, "Тест:", "без ошибок", "");
+		GEN::Generation((wchar_t *)L"C:\\Лабы\\Курсач\\Тест\\out.asm", Tables, functions);
+
+		Log::WriteLine(log, "Тест:", "без ошибок", "");
 		Log::WriteLog(log);
-		Log::WriteParm(log, parm);
-		*/
+		
 		Log::WriteIn(log, in);
 		Log::Close(log);
 	

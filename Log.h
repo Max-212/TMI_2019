@@ -10,9 +10,10 @@ namespace Log
 	{
 		wchar_t logfile[PARM_MAX_SIZE];
 		std::ofstream * stream;
+		
 	};
 
-	static const LOG INTLOG = { L"", NULL };
+	static const LOG INTLOG = { L"", NULL};
 	LOG getlog(wchar_t logfile[]);
 	void WriteLine(LOG log, const char* c, ...);
 	void WriteLine(LOG log, wchar_t* c, ...);
