@@ -49,7 +49,7 @@ void GEN::GetData(std::string &data, LA::Tables tables)
 			data += "\n\t";
 			data += tables.idTable.table[tables.LexTable.table[i + 2].indID].id;
 			if (tables.idTable.table[tables.LexTable.table[i + 2].indID].iddatatype == IT::BOOL)
-				data += " DB ?";
+				data += " DD ?";
 			else if (tables.idTable.table[tables.LexTable.table[i + 2].indID].iddatatype == IT::INT)
 				data += " DD ?";
 			else if (tables.idTable.table[tables.LexTable.table[i + 2].indID].iddatatype == IT::STR)
@@ -76,7 +76,7 @@ void GEN::GetConst(std::string &code, LA::Tables tables)
 			}
 			else if (tables.idTable.table[i].iddatatype == IT::BOOL)
 			{
-				code += " db ";
+				code += " dd ";
 				if (tables.idTable.table[i].value.vbool) value = "1";
 				else value = "0";
 				code += value;
@@ -113,19 +113,19 @@ void GEN::GetCode(std::string &code, LA::Tables tables)
 					if (tables.idTable.table[inf.indI].iddatatype == IT::INT)
 					{
 						code += tables.idTable.table[inf.indI].id;
-						code += " : dd ";
+						code += " : DWORD ";
 						if (tables.LexTable.table[i + 1].lexema != ')') code += ", ";
 					}
 					else if (tables.idTable.table[inf.indI].iddatatype == IT::BOOL)
 					{
 						code += tables.idTable.table[inf.indI].id;
-						code += " : db ";
+						code += " : DWORD ";
 						if (tables.LexTable.table[i + 1].lexema != ')') code += ", ";
 					}
 					else if (tables.idTable.table[inf.indI].iddatatype == IT::STR)
 					{
 						code += tables.idTable.table[inf.indI].id;
-						code += " : dd ";
+						code += " : DWORD ";
 						if (tables.LexTable.table[i + 1].lexema != ')') code += ", ";
 					}
 				}
@@ -170,36 +170,117 @@ void GEN::GetCode(std::string &code, LA::Tables tables)
 			}
 		}
 
-		else if(tables.LexTable.table[i].lexema == 'w') // вывод в консоль
+		else if (tables.LexTable.table[i].lexema == 'w') // вывод в консоль
 		{
 			inf.indI = tables.LexTable.table[i + 2].indID;
 			inf.id = tables.idTable.table[inf.indI].id;
 
 			if (tables.idTable.table[inf.indI].iddatatype == IT::STR)
 			{
-				code += "push offset ";
+				code += "mov EAX, offset ";
 				code += tables.idTable.table[inf.indI].id;
+				code += "\npush EAX";
 				code += "\ncall ConsoleStr\n\n";
 			}
 			else if (tables.idTable.table[inf.indI].iddatatype == IT::INT)
 			{
-				code += "push ";
+				code += "mov EAX, ";
 				code += tables.idTable.table[inf.indI].id;
+				code += "\npush EAX";
 				code += "\ncall ConsoleInt\n\n";
 
 			}
 			else if (tables.idTable.table[inf.indI].iddatatype == IT::BOOL)
 			{
-				
-				code += "push ";
+				code += "mov EAX, ";
 				code += tables.idTable.table[inf.indI].id;
+				code += "\npush EAX";
 				code += "\ncall ConsoleBool\n\n";
 
 			}
 
 		}
 
+		else if (tables.LexTable.table[i].lexema == '=')
+		{
+			inf.indExpr = tables.LexTable.table[i-1].indID;
+			while (tables.LexTable.table[i].lexema != ';')
+			{
+				if (tables.LexTable.table[i].lexema == 'i' || tables.LexTable.table[i].lexema == 'l')
+				{
+					inf.indI = tables.LexTable.table[i].indID;
+					if (tables.idTable.table[inf.indI].iddatatype == IT::STR)
+					{
+						code += "push offset ";
+						code += tables.idTable.table[inf.indI].id;
+						code += "\n";
+					}
+					else
+					{
+						code += "push ";
+						code += tables.idTable.table[inf.indI].id;
+						code += "\n";
+					}
+				}
+				else if (tables.LexTable.table[i].lexema == 'o')
+				{
+					if (tables.LexTable.table[i].operatorValue == '+')
+					{
+						code += "pop EAX\n";
+						code += "pop EBX\n";
+						code += "add EAX, EBX\n";
+						code += "push EAX\n";
+					}
+					else if (tables.LexTable.table[i].operatorValue == '-')
+					{
+						code += "pop EBX\n";
+						code += "pop EAX\n";
+						code += "sub EAX, EBX\n";
+						code += "push EAX\n";
+					}
+					else if (tables.LexTable.table[i].operatorValue == '*')
+					{
+						code += "pop EAX\n";
+						code += "pop EBX\n";
+						code += "imul EAX, EBX\n";
+						code += "push EAX\n";
+					}
+					else if (tables.LexTable.table[i].operatorValue == '/')
+					{
+						code += "pop EBX\n";
+						code += "pop EAX\nCDQ\n";
+						code += "div EBX\n";
+						code += "push EAX\n";
+					}
+					else if(tables.LexTable.table[i].operatorValue == '%')
+					{
+						code += "pop EBX\n";
+						code += "pop EAX\nCDQ\n";
+						code += "div EBX\n";
+						code += "mov EAX, EDX\n";
+						code += "push EAX\n";
+					}
+				}
+				else if (tables.LexTable.table[i].lexema == '@')
+				{
+					code += "call ";
+					code += tables.idTable.table[tables.LexTable.table[i].indID].id;
+					code += "\npush EAX\n";
+				}
 
+				i++;
+			}
+			code += "pop ";
+			code += tables.idTable.table[inf.indExpr].id;
+			code += "\n\n";
+		}
+
+		if (tables.LexTable.table[i].lexema == '?')
+		{
+
+		}
+	
+	
 	}
 }
 
@@ -217,5 +298,6 @@ void GEN::Generation(wchar_t * file, LA::Tables tables, std::vector<SA::Function
 	out << AsmCode.Const;
 	out << AsmCode.Data;
 	out << AsmCode.Code;
-	
+
+
 }

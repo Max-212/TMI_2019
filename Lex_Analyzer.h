@@ -5,7 +5,7 @@
 #include"In.h"
 #include <vector>
 
-#define N_GRAPHS 29
+#define N_GRAPHS 30
 
 #define GRAPH_string  (7,   \
 FST::NODE(1, FST::RELATION('s', 1)), \

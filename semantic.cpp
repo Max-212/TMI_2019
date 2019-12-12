@@ -44,6 +44,10 @@ std::vector<SA::Function> SA::SemAnalysis(LA::Tables tables)
 	std::vector<SA::Function> functions;
 	functions.push_back({ tables.idTable.table[0] });
 	functions[0].parameters.push_back(IT::STR);
+	functions.push_back({ tables.idTable.table[1] });
+	functions[1].parameters.push_back(IT::STR);
+	functions[1].parameters.push_back(IT::STR);
+	
 	int indID;
 	int indPar;
 	int nPar;

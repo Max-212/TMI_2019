@@ -14,6 +14,7 @@ bool PN::PolishNotation(int n, LT::LexTable & lextable, IT::IdTable & idtable)
 	int i = n;
 	int priority;
 	int parCount = 0;
+	int indID = -1;
 
 	while (lextable.table[i].lexema != ';')
 	{
@@ -21,6 +22,7 @@ bool PN::PolishNotation(int n, LT::LexTable & lextable, IT::IdTable & idtable)
 
 		if (lextable.table[i].lexema == 'i' && lextable.table[i + 1].lexema == '(') // попали на вызов функции. 
 		{
+			indID = lextable.table[i].indID;
 			i++;
 			priority = getP(lextable.table[i]);
 			while (priority < 2)
@@ -40,7 +42,7 @@ bool PN::PolishNotation(int n, LT::LexTable & lextable, IT::IdTable & idtable)
 						stack.pop();
 					}
 					stack.pop();
-					current.push({ '@', lextable.table[i].sn, lextable.table[i].idxLT, parCount });
+					current.push({ '@', lextable.table[i].sn, lextable.table[i].idxLT, indID});
 					i++;
 					priority = getP(lextable.table[i]);
 					break;
@@ -111,7 +113,7 @@ int PN::getP(LT::Entry table)
 
 	if (token == 'o') token = table.operatorValue;
 
-	if (token == '*' || token == '/') return 3;
+	if (token == '*' || token == '/' || token == '%') return 3;
 	else if (token == '+' || token == '-') return 2;
 	else if (token == '(') return 1;
 	else if (token == ')') return -1;

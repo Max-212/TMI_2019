@@ -48,6 +48,7 @@ void LA::InTables(LA::Tables& tables, int posword, int line, char* word, LA::Inf
 		{LEX_DIRSLASH  , FST::FST GRAPH_DIRSLASH			},
 		{LEX_MINUS     , FST::FST GRAPH_MINUS				},
 		{LEX_PLUS      , FST::FST GRAPH_PLUS				},
+		{LEX_PERCENT   , FST::FST GRAPH_percent             },
 		{LEX_SEMICOLON , FST::FST GRAPH_SEMICOLON			},
 		{LEX_STAR      , FST::FST GRAPH_START				},
 		{LEX_EQUALITY  , FST::FST GRAPH_equality			},
@@ -198,7 +199,10 @@ LA::Tables LA::Lex_analyz(In::IN in) {
 	tables.idTable	= IT::Create();
 	LA::Inf inf;
 	inf.functions.push_back("strlen");
+	inf.functions.push_back("strcmp");
 	IT::Entry IdTableEntry = { -1, (char*)"strlen", IT::IDDATATYPE::INT, IT::IDTYPE::F , 0 };
+	IT::Add(tables.idTable, IdTableEntry);
+	IdTableEntry = { -1, (char*)"strcmp", IT::IDDATATYPE::BOOL, IT::IDTYPE::F , 0 };
 	IT::Add(tables.idTable, IdTableEntry);
 
 	int i = 0; // индекс по in.text

@@ -61,10 +61,10 @@ int wmain(int argc, wchar_t* argv[]) {
 
 		//}
 
-		MFST_TRACE_START
-			MFST::Mfst mfst(Tables, GRB::getGreibach());
-		mfst.start();
-		mfst.printrules();
+		//MFST_TRACE_START
+		//	MFST::Mfst mfst(Tables, GRB::getGreibach());
+		//mfst.start();
+		//mfst.printrules();
 
 		std::vector<SA::Function> functions = SA::SemAnalysis(Tables);
 
