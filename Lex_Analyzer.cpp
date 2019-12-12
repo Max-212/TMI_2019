@@ -60,6 +60,7 @@ void LA::InTables(LA::Tables& tables, int posword, int line, char* word, LA::Inf
 		{LEX_ID		   , FST::FST GRAPH_id					},
 	};
 	
+	std::string LiteralPrefix = "L";
 	char lexema = (char)"";
 	int indexIT = -1; 
 	bool executeFlag = 0;
@@ -120,7 +121,8 @@ void LA::InTables(LA::Tables& tables, int posword, int line, char* word, LA::Inf
 	if (executeFlag)
 	{	
 		if (IdFlag)
-		{if (CheckInVector(inf.functions, (const char*)word) || lexema == 'l');
+		{
+			if (CheckInVector(inf.functions, (const char*)word) || lexema == 'l');
 			else if (inf.flagInFunc)
 			{
 				strcat(word, "_");
@@ -128,8 +130,8 @@ void LA::InTables(LA::Tables& tables, int posword, int line, char* word, LA::Inf
 			}
 			
 			indexIT = IT::IsId(tables.idTable, word);
-			if(indexIT != TI_NULLIDX && inf.iddatatype != IT::IDDATATYPE::NODEF && inf.idtype != IT::IDTYPE::L) throw Error::geterrorin(123, line, posword); // повторная инициализация
-			if (indexIT == TI_NULLIDX) // добавляем в таблицу индентификаторов
+			if(indexIT != TI_NULLIDX && inf.iddatatype != IT::IDDATATYPE::NODEF && inf.idtype != IT::IDTYPE::L && inf.idtype != IT::P) throw Error::geterrorin(123, line, posword); // повторная инициализация
+			else if (indexIT == TI_NULLIDX) // добавляем в таблицу индентификаторов
 			{
 				if(inf.iddatatype == IT::IDDATATYPE::NODEF) throw Error::geterrorin(122, line, posword); // использование без объявления
 				indexIT = tables.idTable.size;
@@ -139,9 +141,15 @@ void LA::InTables(LA::Tables& tables, int posword, int line, char* word, LA::Inf
 				inf.iddatatype = IT::IDDATATYPE::NODEF;
 				inf.idtype = IT::IDTYPE::V;
 			}
+			else
+			{
+				inf.iddatatype = IT::IDDATATYPE::NODEF;
+				inf.idtype = IT::IDTYPE::V;
+			}
 		} 
 		LT::Add(tables.LexTable, {lexema, line, tables.LexTable.size, indexIT, word[0], posword});
-		//word = NULL;
+		//inf.idtype = IT::IDTYPE::V;
+	
 	}
 	else throw Error::geterrorin(113, line, posword);
 }
@@ -184,6 +192,7 @@ void LA::GetInf(LA::Inf& inf, char *word)
 
 LA::Tables LA::Lex_analyz(In::IN in) {
 
+	
 	LA::Tables tables;
 	tables.LexTable = LT::Create();
 	tables.idTable	= IT::Create();

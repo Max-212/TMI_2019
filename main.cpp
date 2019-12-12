@@ -78,6 +78,11 @@ int wmain(int argc, wchar_t* argv[]) {
 
 		GEN::Generation((wchar_t *)L"C:\\Лабы\\Курсач\\Тест\\out.asm", Tables, functions);
 
+		for (int i = 0; i < Tables.idTable.size; i++)
+		{
+			cout << i << "|\t" << Tables.idTable.table[i].id << "\t\t\t\t" << Tables.idTable.table[i].idtype << "\t\t\t" << Tables.idTable.table[i].iddatatype << "\t\t" << Tables.idTable.table[i].idxfirstLE << "\t\t" << Tables.idTable.table[i].value.vint << endl;
+		}
+
 		Log::WriteLine(log, "Тест:", "без ошибок", "");
 		Log::WriteLog(log);
 		
