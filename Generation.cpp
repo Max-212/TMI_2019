@@ -5,7 +5,7 @@
 #include <vector>
 #include "Lex_Analyzer.h"
 #include "Log.h"
-#include "Generation.h"
+#include "Generation.h" 
 #include "semantic.h"
 #include <string>
 
@@ -53,7 +53,7 @@ void GEN::GetData(std::string &data, LA::Tables tables)
 			else if (tables.idTable.table[tables.LexTable.table[i + 2].indID].iddatatype == IT::INT)
 				data += " DD ?";
 			else if (tables.idTable.table[tables.LexTable.table[i + 2].indID].iddatatype == IT::STR)
-				data += " DB ?";
+				data += " DD ?";
 		}
 	}
 	data += "\n\n";
@@ -177,10 +177,20 @@ void GEN::GetCode(std::string &code, LA::Tables tables)
 
 			if (tables.idTable.table[inf.indI].iddatatype == IT::STR)
 			{
-				code += "mov EAX, offset ";
-				code += tables.idTable.table[inf.indI].id;
-				code += "\npush EAX";
-				code += "\ncall ConsoleStr\n\n";
+				if (tables.idTable.table[inf.indI].idtype == IT::L)
+				{
+					code += "mov EAX, offset ";
+					code += tables.idTable.table[inf.indI].id;
+					code += "\npush EAX";
+					code += "\ncall ConsoleStr\n\n";
+				}
+				else
+				{
+					code += "mov EAX, ";
+					code += tables.idTable.table[inf.indI].id;
+					code += "\npush EAX";
+					code += "\ncall ConsoleStr\n\n";
+				}
 			}
 			else if (tables.idTable.table[inf.indI].iddatatype == IT::INT)
 			{
@@ -209,7 +219,7 @@ void GEN::GetCode(std::string &code, LA::Tables tables)
 				if (tables.LexTable.table[i].lexema == 'i' || tables.LexTable.table[i].lexema == 'l')
 				{
 					inf.indI = tables.LexTable.table[i].indID;
-					if (tables.idTable.table[inf.indI].iddatatype == IT::STR)
+					if (tables.idTable.table[inf.indI].iddatatype == IT::STR && tables.idTable.table[inf.indI].idtype == IT::L)
 					{
 						code += "push offset ";
 						code += tables.idTable.table[inf.indI].id;
@@ -273,14 +283,67 @@ void GEN::GetCode(std::string &code, LA::Tables tables)
 			code += "pop ";
 			code += tables.idTable.table[inf.indExpr].id;
 			code += "\n\n";
+			
 		}
 
-		if (tables.LexTable.table[i].lexema == '?')
+		else if (tables.LexTable.table[i].lexema == '?')
 		{
-
+			inf.jmpTrue = "true";
+			inf.jmpExit = "exit";
+			char* buffer = new char[256];
+			itoa(inf.nIF, buffer, 10);
+			inf.jmpTrue += buffer;
+			inf.jmpExit += buffer;
+			inf.inIf = true;
+			inf.nIF++;
+			inf.StExit.push(inf.jmpExit);
 		}
-	
-	
+
+		else if (tables.LexTable.table[i].lexema == '(' && inf.inIf)
+		{
+			i++;
+				if ((tables.LexTable.table[i].lexema == 'i' || tables.LexTable.table[i].lexema == 'l') && tables.LexTable.table[i + 1].lexema == ')') // true или false
+				{
+					code += "\nmov EAX,";
+					code += tables.idTable.table[tables.LexTable.table[i].indID].id;
+					code += "\nmov EBX, 1\n";
+					code += "sub EAX, EBX\n";
+					code += "je ";
+					code += inf.jmpTrue;
+					code += "\njmp ";
+					code += inf.jmpExit;
+					code += "\n\n";
+					inf.inIf = false;
+				}
+				else
+				{
+					code += "\nmov EAX,";
+					code += tables.idTable.table[tables.LexTable.table[i].indID].id;
+					code += "\nmov EBX, ";
+					code += tables.idTable.table[tables.LexTable.table[i+2].indID].id;
+					code += "\nsub EAX, EBX\n";
+					code += "je ";
+					code += inf.jmpTrue;
+					code += "\njmp ";
+					code += inf.jmpExit;
+					code += "\n\n";
+					inf.inIf = false;
+				}
+		}
+
+		if (tables.LexTable.table[i].lexema == '[')
+		{
+			code += inf.jmpTrue;
+			code += ":\n";
+		}
+
+		if (tables.LexTable.table[i].lexema == ']')
+		{
+			code += "\n";
+			code += inf.StExit.top();
+			code += ":\n";
+			inf.StExit.pop();
+		}
 	}
 }
 

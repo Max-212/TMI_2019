@@ -8,6 +8,7 @@
 #include "Log.h"
 #include "semantic.h"
 #include <string>
+#include <stack>
 namespace GEN
 {
 
@@ -28,6 +29,11 @@ namespace GEN
 		bool inFunc = false;
 		bool inStart = false;
 		std::string id = "";
+		bool inIf = false;
+		int nIF = 1;
+		std::stack<std::string> StExit;
+		std::string jmpTrue = "true";
+		std::string jmpExit = "exit";
 		
 
 	};

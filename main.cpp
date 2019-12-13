@@ -29,7 +29,7 @@ int wmain(int argc, wchar_t* argv[]) {
 		log = Log::getlog((wchar_t *)L"C:\\Лабы\\Курсач\\Тест\\log.log");
 		//std::ofstream out((wchar_t *)L"C:\\Лабы\\Курсач\\Тест\\out.asm");
 		//wcout << "-in:" << parm.in << ", -out" << parm.out << ", -log: " << parm.log << endl;
-		In::IN in = In::getin((wchar_t *)L"C:\\Лабы\\Курсач\\Тест\\test1.txt");
+		In::IN in = In::getin((wchar_t *)L"C:\\Лабы\\Курсач\\Тест\\MainTest.txt");
 
 		LA::Tables Tables = LA::Lex_analyz(in);
 		////bool i = PN::PolishNotation(15, Tables.LexTable, Tables.idTable);
@@ -61,10 +61,10 @@ int wmain(int argc, wchar_t* argv[]) {
 
 		//}
 
-		//MFST_TRACE_START
-		//	MFST::Mfst mfst(Tables, GRB::getGreibach());
-		//mfst.start();
-		//mfst.printrules();
+		MFST_TRACE_START
+			MFST::Mfst mfst(Tables, GRB::getGreibach());
+		mfst.start();
+		mfst.printrules();
 
 		std::vector<SA::Function> functions = SA::SemAnalysis(Tables);
 
