@@ -58,6 +58,10 @@ std::vector<SA::Function> SA::SemAnalysis(LA::Tables tables)
 		SA::GetFlags(tables.LexTable.table[i].lexema, flags);
 		if (indID != TI_NULLIDX)
 		{
+			if (tables.LexTable.table[i].lexema == 'i' && tables.LexTable.table[i + 1].lexema == '(' && tables.LexTable.table[i - 1].lexema != 'f' )
+			{
+				if(CheckInFunctions(functions, tables.idTable.table[indID].id) == -1) throw Error::geterrorin(122, tables.LexTable.table[i].sn, tables.LexTable.table[i].posWord);
+			}
 			if (flags.flagExpression)// проверяем типы операндов в выражении
 			{
 				if (tables.idTable.table[indID].iddatatype != flags.ExpressionType) throw Error::geterrorin(127, tables.LexTable.table[i].sn, tables.LexTable.table[i].posWord);

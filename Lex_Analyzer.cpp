@@ -75,6 +75,8 @@ void LA::InTables(LA::Tables& tables, int posword, int line, char* word, LA::Inf
 		bool vbool;							// значение bool
 	}value;
 	value.vint = 0;
+	value.vstr.str = (char*)" ";
+	value.vbool = false;
 
 	for (int i = 0; i < N_GRAPHS; i++)
 	{
@@ -214,7 +216,12 @@ LA::Tables LA::Lex_analyz(In::IN in) {
 	if (in.text == (unsigned char*)' ') i++;
 	while (i < in.size)
 	{
-		if (in.text[i] == '\'')
+		if (in.text[i] == '#') 
+		{
+			while (in.text[i] != '\n')
+				i++;
+		}
+		else if (in.text[i] == '\'')
 		{
 			while (true)
 			{

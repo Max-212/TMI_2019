@@ -11,6 +11,9 @@
 
 void FixID(LA::Tables& tables)
 {
+	char* id = (char*)"";
+	char* prefix = new char[256];
+	prefix = (char *)"_TMI";
 	int nLiteral = 1;
 	char* buffer = new char[256];
 	char* L = new char[256];
@@ -24,19 +27,30 @@ void FixID(LA::Tables& tables)
 			itoa(nLiteral, buffer, 10);
 			strcat(L, buffer);
 			tables.idTable.table[i].id = L;
+			nLiteral++;
 			L = NULL;
-			buffer = NULL;
+			delete[] L;
 			L = new char(256);
 			L[0] = 'L';
-			L[1] = '\0';
-			buffer = new char(256);
-			nLiteral++;
+			L[1] = '\0'; 
 		}
+		else
+		{
+			for (int j = 0; j < strlen(tables.idTable.table[i].id); j++)
+				buffer[j] = tables.idTable.table[i].id[j];
+			buffer[strlen(tables.idTable.table[i].id)] = '\0';
+			strcat(buffer, prefix);
+			id = buffer;
+			tables.idTable.table[i].id;
+		}
+		
 	}
 	L = NULL;
 	delete[]L;
 	buffer = NULL;
 	delete[]buffer;
+
+
 }
 
 void GEN::GetData(std::string &data, LA::Tables tables)
@@ -49,9 +63,9 @@ void GEN::GetData(std::string &data, LA::Tables tables)
 			data += "\n\t";
 			data += tables.idTable.table[tables.LexTable.table[i + 2].indID].id;
 			if (tables.idTable.table[tables.LexTable.table[i + 2].indID].iddatatype == IT::BOOL)
-				data += " DD ?";
+				data += " DD 0";
 			else if (tables.idTable.table[tables.LexTable.table[i + 2].indID].iddatatype == IT::INT)
-				data += " DD ?";
+				data += " DD 0";
 			else if (tables.idTable.table[tables.LexTable.table[i + 2].indID].iddatatype == IT::STR)
 				data += " DD ?";
 		}
@@ -83,9 +97,17 @@ void GEN::GetConst(std::string &code, LA::Tables tables)
 			}
 			else if (tables.idTable.table[i].iddatatype == IT::STR)
 			{
-				code += " db ";
-				code += tables.idTable.table[i].value.vstr.str;
-				code += " , 0";
+				if (strcmp(tables.idTable.table[i].value.vstr.str, "''") == 0)
+				{
+					code += " db 0";
+				}
+				else
+				{
+					code += " db ";
+					code += tables.idTable.table[i].value.vstr.str;
+					code += " , 0";
+				}
+				
 			}
 			code += "\n";
 		}
@@ -331,24 +353,26 @@ void GEN::GetCode(std::string &code, LA::Tables tables)
 				}
 		}
 
-		if (tables.LexTable.table[i].lexema == '[')
+		else if (tables.LexTable.table[i].lexema == '[')
 		{
 			code += inf.jmpTrue;
 			code += ":\n";
 		}
 
-		if (tables.LexTable.table[i].lexema == ']')
+		else if (tables.LexTable.table[i].lexema == ']')
 		{
 			code += "\n";
 			code += inf.StExit.top();
 			code += ":\n";
 			inf.StExit.pop();
 		}
+
 	}
 }
-
+  
 void GEN::Generation(wchar_t * file, LA::Tables tables, std::vector<SA::Function> funcs)
 {
+
 	GEN::AsmCode AsmCode;
 	std::ofstream out(file);
 	FixID(tables);
